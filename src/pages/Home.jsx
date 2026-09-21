@@ -5,49 +5,55 @@ import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-
   const [movies, setMovies] = useState([]);
-
   const [error, setError] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies()
-        setMovies(popularMovies)
-      } catch (err) {
-        console.log(err)
-        setError("Failed to load movies.")
-      }
-      finally {
-        setLoading(false)
-      }
+  // 1. Move loadPopularMovies out into the main component scope
+  const loadPopularMovies = async () => {
+    try {
+      const popularMovies = await getPopularMovies();
+      setMovies(popularMovies);
+      setError(null);
+    } catch (err) {
+      console.log(err);
+      setError("Failed to load movies.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    loadPopularMovies()
+  // 2. Run on initial mount
+  useEffect(() => {
+    loadPopularMovies();
+  }, []);
 
-  }, [])
+  // 3. Run whenever search input is cleared
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      loadPopularMovies();
+    }
+  }, [searchQuery]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return
-    if (loading) return
-    setLoading(true)
+    if (!searchQuery.trim()) {
+      loadPopularMovies();
+      return;
+    }
+    if (loading) return;
+    setLoading(true);
 
     try {
-      const searchResults = await searchMovies(searchQuery)
-      setMovies(searchResults)
-      setError(null)
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
     } catch (err) {
-      console.log(err)
-      setError("Failed to search movies...")
+      console.log(err);
+      setError("Failed to search movies...");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
-    /* setSearchQuery(""); */
   };
 
   return (
@@ -65,21 +71,17 @@ function Home() {
         </button>
       </form>
 
-    {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
-    {loading ? (
-      <div className="loading">Loading...</div>
-    ) : ( 
-      <div className="movies-grid">
-        {movies.map(
-          (movie) => 
-            (
-              <MovieCard movie={movie} key={movie.id} />
-            )
-        )}
-      </div>
-    )}
-
+      {loading ? (
+        <div className="loading">Loading...</div>
+      ) : (
+        <div className="movies-grid">
+          {movies.map((movie) => (
+            <MovieCard movie={movie} key={movie.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

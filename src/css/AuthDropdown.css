@@ -1,0 +1,57 @@
+.auth-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.auth-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 280px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  color: #fff;
+}
+
+.email-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.email-auth-form input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #222;
+  color: #fff;
+}
+
+.auth-divider {
+  text-align: center;
+  margin: 12px 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.toggle-signup-text {
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.toggle-link {
+  color: #646cff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.auth-error {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-bottom: 8px;
+}

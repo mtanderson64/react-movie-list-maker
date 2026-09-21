@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import '../css/NavBar.css'
-import GoogleAuthButton from "./GoogleAuthButton";
+import AuthDropdown from "./AuthDropdown";
 
 function NavBar({ user }) {
   return <nav className="navbar">
@@ -10,7 +10,7 @@ function NavBar({ user }) {
     <div className="navbar-links">
       <Link to="/" className="nav-link">Home</Link>
       <Link to="/favorites" className="nav-link">Favorites</Link>
-      <GoogleAuthButton user={user}/>
+      <AuthDropdown user={user}/>
     </div>
   </nav>
 }
