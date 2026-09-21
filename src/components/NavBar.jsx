@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import '../css/NavBar.css'
 import GoogleAuthButton from "./GoogleAuthButton";
 
-function NavBar() {
+function NavBar({ user }) {
   return <nav className="navbar">
     <div className="navbar-brand">
       <Link to="/">Movie Mem</Link>

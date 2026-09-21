@@ -9,20 +9,23 @@ import {Routes, Route} from "react-router-dom"
 import { MovieProvider } from './contexts/MovieContext'
 import NavBar from './components/NavBar'
 
-const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    setUser(user);
-  });
-
-  return unsubscribe;
-}, []);
 
 function App() {
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <MovieProvider>
-      <Navbar user={user} />
+      <NavBar user={user} />
       <main className="main-content"> 
         <Routes>
           <Route path="/" element={<Home />}/>

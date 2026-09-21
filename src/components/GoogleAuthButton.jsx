@@ -4,7 +4,10 @@ function GoogleAuthButton({ user }) {
   return (
     <>
       {user ? (
-        <p>Logged in as {user.email}</p>
+        <button onClick={signInWithGoogle}>
+          {user.email}
+        </button>
+        
       ) : (
         <button onClick={signInWithGoogle}>
           Sign in with Google
