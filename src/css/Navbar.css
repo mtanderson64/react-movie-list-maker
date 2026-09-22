@@ -1,6 +1,6 @@
 .navbar {
-  background-color: #000000;
-  padding: 1rem 1rem;
+  background-color: #151515;
+  padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,8 +8,21 @@
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
+  line-height: 1.125;
+}
+
+
+.nav-logo-img {
+  height: 50px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .navbar-links {
@@ -19,7 +32,7 @@
 
 .nav-link {
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   border-radius: 6px;
   transition: background-color 0.2s;
 }
