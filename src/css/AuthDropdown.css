@@ -10,8 +10,8 @@
   width: 280px;
   background-color: #1a1a1a;
   border: 1px solid #333;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   color: #fff;
@@ -35,11 +35,11 @@
   text-align: center;
   margin: 12px 0;
   color: #888;
-  font-size: 12px;
+  font-size: 1rem;
 }
 
 .toggle-signup-text {
-  font-size: 12px;
+  font-size: 1rem;
   margin-top: 12px;
   text-align: center;
 }
@@ -52,6 +52,6 @@
 
 .auth-error {
   color: #ff4d4d;
-  font-size: 12px;
+  font-size: 0.8rem;
   margin-bottom: 8px;
 }
