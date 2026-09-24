@@ -66,6 +66,7 @@ function AuthDropdown({ user }) {
 
 // If user is logged in, render profile picture square trigger & user dropdown menu
   if (user) {
+
     return (
       <div className="auth-dropdown-container" ref={dropdownRef}>
         <button 
@@ -90,6 +91,7 @@ function AuthDropdown({ user }) {
             <img 
               src={user.photoURL} 
               alt={user.displayName || 'Profile'} 
+              referrerPolicy="no-referrer"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (

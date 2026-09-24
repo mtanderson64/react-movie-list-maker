@@ -1,8 +1,9 @@
 .home {
-  padding: 2rem 0;
+  padding: 2rem 5%;
   width: 100%;
   box-sizing: border-box;
   align-items: center;
+  justify-content: center;
 }
 
 .search-form {
@@ -45,18 +46,19 @@
 }
 
 .movies-grid {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2rem 1.5rem;
-  padding: 1rem 5%;
-  width: 100%;
+  padding: 1rem 0;
+  width:fit-content;
   box-sizing: border-box;
 }
 
 @media (max-width: 992px) {
   .movies-grid {
     gap: 1.5rem 1rem;
+    padding: 1rem 0;
   }
 }
 
@@ -71,7 +73,6 @@
 
   .movies-grid {
     padding: 2rem 0 2rem 0;
-    max-width: 100%;
   }
 }
 

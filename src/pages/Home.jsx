@@ -2,12 +2,19 @@ import MovieCard from "../components/MovieCard";
 import "../css/Home.css";
 import { useState, useEffect } from "react";
 import { searchMovies, getPopularMovies } from "../services/api";
+import { useLocation } from "react-router-dom";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    setSearchQuery("");/* 
+    loadPopularMovies(); */ // Reset to default movies
+  }, [location.key]);
 
   // 1. Move loadPopularMovies out into the main component scope
   const loadPopularMovies = async () => {
