@@ -4,11 +4,11 @@
   overflow: hidden;
   background-color: #1a1a1a;
   transition: transform 0.2s;
-  height: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
-  width: 15vw;
-  max-width: 200px;
+  flex: 1 0 172px;
+
 }
 
 .movie-card:hover {
@@ -113,7 +113,6 @@
 @media (max-width: 960px) {
   .movie-card {
     font-size: 0.8rem;
-    width: 20vw;
   }
   
   .movie-info h3 {
@@ -137,7 +136,6 @@
 @media (max-width: 768px) {
   .movie-card {
     font-size: 0.75rem;
-    width: 25vw;
   }
 
   .movie-info h3 {
@@ -153,7 +151,6 @@
 @media (max-width: 440px) {
   .movie-card {
     font-size: 0.75rem;
-    width: 35vw;
   }
   .main-content {
     padding: 1rem;
