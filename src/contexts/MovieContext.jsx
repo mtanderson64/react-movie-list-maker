@@ -64,6 +64,25 @@ export const MovieProvider = ({children}) => {
     }
   };
 
+  const reorderFavorites = async (newFavorites) => {
+    // 1. Update local React state instantly so the UI responds right away
+    setFavorites(newFavorites);
+
+    if (!user) return;
+
+    // 2. Optional: Save order to Firebase if user is logged in
+    try {
+      // Loop through each movie and save its new position index in Firestore
+      const updatePromises = newFavorites.map((movie, index) => {
+        const movieRef = doc(db, "users", user.uid, "favorites", movie.id.toString());
+        return setDoc(movieRef, { ...movie, order: index }, { merge: true });
+      });
+      await Promise.all(updatePromises);
+    } catch (error) {
+      console.error("Error updating favorite order in Firebase:", error);
+    }
+  };
+
   const isFavorite = (movieId) => {
     return favorites.some(movie => movie.id === movieId)
   }
@@ -72,6 +91,7 @@ export const MovieProvider = ({children}) => {
     favorites,
     addToFavorites,
     removeFromFavorites,
+    reorderFavorites,
     isFavorite
   }
   

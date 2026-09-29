@@ -37,6 +37,17 @@
   line-height: 1.6;
 }
 
+.draggable-card-wrapper {
+  touch-action: none; /* Crucial: Prevents browser scrolling from hijacking the drag */
+  user-select: none;
+}
+
+.draggable-card-wrapper.is-dragging {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  cursor: grabbing;
+}
+
 
 /* Animation for new favorites being added */
 @keyframes fadeIn {
