@@ -1,7 +1,10 @@
 .favorites {
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
   width: 100%;
   box-sizing: border-box;
+  justify-content: center;
 }
 
 .favorites h2 {
@@ -10,6 +13,7 @@
   font-size: 2rem;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-left: 5vw;
 }
 
 .favorites-empty {
@@ -48,4 +52,11 @@
 
 .movies-grid > * {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+@media (max-width: 992px) {
+  .favorites h2 {
+    margin-left: 0;
+    text-align: center;
+  }
 }

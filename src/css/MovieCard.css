@@ -4,11 +4,9 @@
   overflow: hidden;
   background-color: #1a1a1a;
   transition: transform 0.2s;
-  height: fit-content;
   display: flex;
   flex-direction: column;
-  flex: 1 0 172px;
-
+  width: 100%; /* Spans the full grid column width */
 }
 
 .movie-card:hover {
@@ -113,6 +111,7 @@
 @media (max-width: 960px) {
   .movie-card {
     font-size: 0.8rem;
+  flex: 1 0 142px;
   }
   
   .movie-info h3 {
