@@ -1,16 +1,18 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { db, auth } from "../services/firebase";
-import { doc, setDoc, deleteDoc, collection, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-const MovieContext = createContext()
+const MovieContext = createContext();
 
-export const useMovieContext = () => useContext(MovieContext)
+export const useMovieContext = () => useContext(MovieContext);
 
-export const MovieProvider = ({children}) => {
+export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
-
   const [user, setUser] = useState(null);
+
+  // Ref to prevent snapshot listener from overwriting local state during drag/drop ops
+  const isUpdatingRef = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -25,14 +27,18 @@ export const MovieProvider = ({children}) => {
   useEffect(() => {
     if (!user) return;
 
-    // Reference to: users/{userId}/favorites
+    // Reference with sorting by order field
     const favoritesRef = collection(db, "users", user.uid, "favorites");
+    const q = query(favoritesRef, orderBy("order", "asc"));
 
-    // Automatically update `favorites` state whenever Firestore changes
-    const unsubscribe = onSnapshot(favoritesRef, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      // Don't overwrite state if we are currently performing a reorder update
+      if (isUpdatingRef.current) return;
+
       const favList = snapshot.docs.map((doc) => doc.data());
       setFavorites(favList);
     });
+
     return () => unsubscribe();
   }, [user]);
 
@@ -44,9 +50,10 @@ export const MovieProvider = ({children}) => {
     }
 
     try {
-      // Points to: users/{userId}/favorites/{movieId}
       const movieRef = doc(db, "users", user.uid, "favorites", movie.id.toString());
-      await setDoc(movieRef, movie);
+      // Assign default order index to the end of the array
+      const newOrder = favorites.length;
+      await setDoc(movieRef, { ...movie, order: newOrder }, { merge: true });
     } catch (error) {
       console.error("Error adding to favorites:", error);
     }
@@ -56,7 +63,6 @@ export const MovieProvider = ({children}) => {
     if (!user) return;
 
     try {
-      // Points to: users/{userId}/favorites/{movieId}
       const movieRef = doc(db, "users", user.uid, "favorites", movieId.toString());
       await deleteDoc(movieRef);
     } catch (error) {
@@ -65,37 +71,45 @@ export const MovieProvider = ({children}) => {
   };
 
   const reorderFavorites = async (newFavorites) => {
-    // 1. Update local React state instantly so the UI responds right away
+    // Lock snapshot updates so Firebase doesn't trigger a race condition
+    isUpdatingRef.current = true;
+
+    // Update local state immediately
     setFavorites(newFavorites);
 
-    if (!user) return;
-
-    // 2. Optional: Save order to Firebase if user is logged in
-    try {
-      // Loop through each movie and save its new position index in Firestore
-      const updatePromises = newFavorites.map((movie, index) => {
-        const movieRef = doc(db, "users", user.uid, "favorites", movie.id.toString());
-        return setDoc(movieRef, { ...movie, order: index }, { merge: true });
-      });
-      await Promise.all(updatePromises);
-    } catch (error) {
-      console.error("Error updating favorite order in Firebase:", error);
+    if (user) {
+      try {
+        const updatePromises = newFavorites.map((movie, index) => {
+          const movieRef = doc(db, "users", user.uid, "favorites", movie.id.toString());
+          return setDoc(movieRef, { ...movie, order: index }, { merge: true });
+        });
+        await Promise.all(updatePromises);
+      } catch (error) {
+        console.error("Error updating favorite order in Firebase:", error);
+      }
     }
+
+    // Unlock snapshot updates after write finishes
+    setTimeout(() => {
+      isUpdatingRef.current = false;
+    }, 500);
   };
 
   const isFavorite = (movieId) => {
-    return favorites.some(movie => movie.id === movieId)
-  }
+    return favorites.some((movie) => movie.id === movieId);
+  };
 
   const value = {
     favorites,
     addToFavorites,
     removeFromFavorites,
     reorderFavorites,
-    isFavorite
-  }
-  
-  return <MovieContext.Provider value={value}>
-    {children}
-  </MovieContext.Provider>
-}
+    isFavorite,
+  };
+
+  return (
+    <MovieContext.Provider value={value}>
+      {children}
+    </MovieContext.Provider>
+  );
+};

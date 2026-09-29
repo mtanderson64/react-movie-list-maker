@@ -38,14 +38,28 @@
 }
 
 .draggable-card-wrapper {
-  touch-action: none; /* Crucial: Prevents browser scrolling from hijacking the drag */
+  touch-action: none; /* Prevents mobile page scroll interference */
   user-select: none;
+  position: relative;
 }
 
 .draggable-card-wrapper.is-dragging {
   transform: scale(1.05);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
   cursor: grabbing;
+  z-index: 9999;
+}
+
+/* Creates a subtle dashed outline inside the opened space */
+.draggable-card-wrapper.placeholder-slot {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Ensure child card inside placeholder doesn't block clicks/mouse */
+.draggable-card-wrapper.placeholder-slot > * {
+  visibility: hidden;
 }
 
 

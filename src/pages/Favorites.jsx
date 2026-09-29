@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -12,13 +12,14 @@ import {
   SortableContext,
   rectSortingStrategy,
   useSortable,
+  arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import "../css/Favorites.css";
 import { useMovieContext } from "../contexts/MovieContext";
 import MovieCard from "../components/MovieCard";
 
-// Individual Card Component with Sortable Hooks
+// Individual Draggable Card Component
 function SortableMovieCard({ movie }) {
   const {
     attributes,
@@ -32,7 +33,7 @@ function SortableMovieCard({ movie }) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.3 : 1, // Dim the original spot while dragging
+    opacity: isDragging ? 0 : 1,
     cursor: "grab",
   };
 
@@ -42,7 +43,7 @@ function SortableMovieCard({ movie }) {
       style={style}
       {...attributes}
       {...listeners}
-      className="draggable-card-wrapper"
+      className={`draggable-card-wrapper ${isDragging ? "placeholder-slot" : ""}`}
     >
       <MovieCard movie={movie} />
     </div>
@@ -51,19 +52,28 @@ function SortableMovieCard({ movie }) {
 
 function Favorites() {
   const { favorites, reorderFavorites } = useMovieContext();
+  
+  const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
+  const isDraggingRef = useRef(false);
 
-  // Configure Sensors for 500ms delay on both Mouse and Touch
+  // Sync with favorites context ONLY when not dragging
+  useEffect(() => {
+    if (favorites && !isDraggingRef.current) {
+      setItems(favorites);
+    }
+  }, [favorites]);
+
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      delay: 500,
+      delay: 200, // Reduced from 500ms for more responsive hold-to-drag
       tolerance: 5,
     },
   });
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 500,
+      delay: 200,
       tolerance: 5,
     },
   });
@@ -71,39 +81,40 @@ function Favorites() {
   const sensors = useSensors(mouseSensor, touchSensor);
 
   const handleDragStart = (event) => {
+    isDraggingRef.current = true;
     setActiveId(event.active.id);
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragOver = (event) => {
     const { active, over } = event;
+    if (!over) return;
 
-    if (over && active.id !== over.id) {
-      const oldIndex = favorites.findIndex(
-        (m) => m.id.toString() === active.id
-      );
-      const newIndex = favorites.findIndex(
-        (m) => m.id.toString() === over.id
-      );
+    const activeIndex = items.findIndex((m) => m.id.toString() === active.id);
+    const overIndex = items.findIndex((m) => m.id.toString() === over.id);
 
-      const items = Array.from(favorites);
-      const [reorderedItem] = items.splice(oldIndex, 1);
-      items.splice(newIndex, 0, reorderedItem);
-
-      reorderFavorites(items);
+    if (activeIndex !== overIndex) {
+      setItems((prevItems) => arrayMove(prevItems, activeIndex, overIndex));
     }
+  };
 
+  const handleDragEnd = () => {
     setActiveId(null);
+    isDraggingRef.current = false;
+    // Persist final local state to Context & Firebase
+    reorderFavorites(items);
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
+    isDraggingRef.current = false;
+    setItems(favorites);
   };
 
   const activeMovie = activeId
-    ? favorites.find((m) => m.id.toString() === activeId)
+    ? items.find((m) => m.id.toString() === activeId)
     : null;
 
-  if (favorites && favorites.length > 0) {
+  if (items && items.length > 0) {
     return (
       <div className="favorites">
         <h2>Your Favorites</h2>
@@ -111,21 +122,21 @@ function Favorites() {
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
         >
           <SortableContext
-            items={favorites.map((m) => m.id.toString())}
+            items={items.map((m) => m.id.toString())}
             strategy={rectSortingStrategy}
           >
             <div className="movies-grid">
-              {favorites.map((movie) => (
+              {items.map((movie) => (
                 <SortableMovieCard key={movie.id} movie={movie} />
               ))}
             </div>
           </SortableContext>
 
-          {/* DragOverlay renders the floating clone directly under the cursor */}
           <DragOverlay adjustScale={false}>
             {activeMovie ? (
               <div className="draggable-card-wrapper is-dragging">
