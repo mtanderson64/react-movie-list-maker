@@ -37,31 +37,65 @@
   line-height: 1.6;
 }
 
+/* Base Wrapper */
 .draggable-card-wrapper {
-  touch-action: none; /* Prevents mobile page scroll interference */
+  touch-action: none;
   user-select: none;
   position: relative;
+  box-sizing: border-box;
 }
 
+/* Styling for the floating card inside DragOverlay */
 .draggable-card-wrapper.is-dragging {
-  transform: scale(1.05);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  background: transparent !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: none !important;
+  border-radius: 12px;
+  overflow: hidden;
   cursor: grabbing;
   z-index: 9999;
+  
+  /* Prevent keyframe/hover translations from breaking shadow bounds */
+  animation: none !important;
+  transform: none !important;
+  height: auto !important;
 }
 
-/* Creates a subtle dashed outline inside the opened space */
+/* Disable hover transforms on children while dragging */
+.draggable-card-wrapper.is-dragging * {
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.draggable-card-wrapper.is-dragging img,
+.movie-card img {
+  display: block !important;
+  width: 100%;
+  height: auto !important;
+  margin: 0 !important;
+}
+
+.draggable-card-wrapper.is-dragging .movie-info,
+.movie-info {
+  margin-top: 0 !important;
+}
+
+/* RESTORED: Dashed outline inside the empty opening space */
 .draggable-card-wrapper.placeholder-slot {
-  border: 2px dashed rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.03);
+  border: 2px dashed rgba(255, 255, 255, 0.35) !important;
+  border-radius: 12px !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  box-sizing: border-box !important;
+  width: 100%;
+  min-height: 100%;
+  opacity: 1 !important; /* Forces the box visible even when opacity: 0 was set on wrapper */
 }
 
-/* Ensure child card inside placeholder doesn't block clicks/mouse */
+/* Hide the child card inside the placeholder slot without collapsing height */
 .draggable-card-wrapper.placeholder-slot > * {
-  visibility: hidden;
+  visibility: hidden !important;
 }
-
 
 /* Animation for new favorites being added */
 @keyframes fadeIn {
@@ -75,7 +109,7 @@
   }
 }
 
-.movies-grid > * {
+.movies-grid > .draggable-card-wrapper {
   animation: fadeIn 0.3s ease-out forwards;
 }
 

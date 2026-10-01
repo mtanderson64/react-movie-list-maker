@@ -7,6 +7,8 @@
   display: flex;
   flex-direction: column;
   width: 100%; /* Spans the full grid column width */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .movie-card:hover {
@@ -25,29 +27,6 @@
   object-fit: cover;
 }
 
-.movie-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.8)
-  );
-  opacity: 0;
-  transition: opacity 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1rem;
-}
-
-.movie-card:hover .movie-overlay {
-  opacity: 1;
-}
-
 .favorite-btn {
   position: absolute;
   top: 1rem;
@@ -62,12 +41,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+
+  /* Start completely invisible */
+  opacity: 0;
+  pointer-events: none; /* Prevents clicking while invisible */
+
+  /* Smooth fade-in for all visual properties */
+  transition: 
+    opacity 0.25s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  /* Backdrop blur setup */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* Force GPU layer isolation so the blur is pre-baked */
+  will-change: opacity, transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  z-index: 10;
 }
 
+/* 2. Show button when hovering over the parent movie card */
+.movie-card:hover .favorite-btn {
+  opacity: 1;
+  pointer-events: auto; /* Enable clicks when visible */
+}
+
+/* 3. Button hover state (when cursor is directly on the button) */
 .favorite-btn:hover {
   background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1) translate3d(0, 0, 0);
 }
+
+
 
 .favorite-btn.active {
   color: #ff4757;
