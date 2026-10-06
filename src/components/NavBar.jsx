@@ -15,6 +15,7 @@ function NavBar({ user }) {
     <div className="navbar-links">
       <Link to="/" className="nav-link">Home</Link>
       <Link to="/favorites" className="nav-link">Favorites</Link>
+      <Link to="/lists" className="nav-link">Lists</Link>
       <AuthDropdown user={user}/>
     </div>
   </nav>

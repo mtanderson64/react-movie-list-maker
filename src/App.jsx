@@ -8,6 +8,7 @@ import Favorites from './pages/Favorites'
 import {Routes, Route} from "react-router-dom"
 import { MovieProvider } from './contexts/MovieContext'
 import NavBar from './components/NavBar'
+import Lists from './pages/Lists';
 
 
 
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/favorites" element={<Favorites />}/>
+          <Route path="/lists" element={<Lists />}/>
         </Routes>
       </main>
     </MovieProvider>

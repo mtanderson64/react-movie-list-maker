@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { db, auth } from "../services/firebase";
-import { doc, setDoc, deleteDoc, collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const MovieContext = createContext();
@@ -10,6 +10,8 @@ export const useMovieContext = () => useContext(MovieContext);
 export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [customLists, setCustomLists] = useState([]);
 
   // Ref to prevent snapshot listener from overwriting local state during drag/drop ops
   const isUpdatingRef = useRef(false);
@@ -20,6 +22,7 @@ export const MovieProvider = ({ children }) => {
       if (!currentUser) {
         setFavorites([]); // Clear favorites if user logs out
       }
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -99,12 +102,54 @@ export const MovieProvider = ({ children }) => {
     return favorites.some((movie) => movie.id === movieId);
   };
 
+  const createList = async (title) => {
+    if (!user) {
+      alert("Please sign in to create a list!");
+      return;
+    }
+
+    try {
+      const customListsRef = collection(db, "users", user.uid, "customLists");
+      await addDoc(customListsRef, {
+        title: title,
+        createdAt: serverTimestamp(),
+        movies: [] // Starts as an empty array of movies
+      });
+    } catch (error) {
+      console.error("Error creating custom list:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      setCustomLists([]);
+      return;
+    }
+
+    const customListsRef = collection(db, "users", user.uid, "customLists");
+    const q = query(customListsRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const listsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCustomLists(listsData);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
   const value = {
+    user,
+    loading,
     favorites,
     addToFavorites,
     removeFromFavorites,
     reorderFavorites,
     isFavorite,
+    createList,
+    customLists,
   };
 
   return (
