@@ -1,6 +1,18 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { db, auth } from "../services/firebase";
-import { doc, setDoc, deleteDoc, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const MovieContext = createContext();
@@ -120,6 +132,29 @@ export const MovieProvider = ({ children }) => {
     }
   };
 
+  const addMovieToList = async (listId, movie) => {
+    if (!user) {
+      alert("Please sign in to add movies to a list!");
+      return;
+    }
+
+    try {
+      const listRef = doc(
+        db,
+        "users",
+        user.uid,
+        "customLists",
+        listId
+      );
+
+      await updateDoc(listRef, {
+        movies: arrayUnion(movie)
+      });
+    } catch (error) {
+      console.error("Error adding movie to list:", error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       setCustomLists([]);
@@ -149,6 +184,7 @@ export const MovieProvider = ({ children }) => {
     reorderFavorites,
     isFavorite,
     createList,
+    addMovieToList,
     customLists,
   };
 

@@ -1,14 +1,12 @@
 .movie-card {
   position: relative;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible; /* Prevents dropdown menu from clipping */
   background-color: #1a1a1a;
   transition: transform 0.2s;
   display: flex;
   flex-direction: column;
-  width: 100%; /* Spans the full grid column width */
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
+  width: 100%;
 }
 
 .movie-card:hover {
@@ -19,6 +17,8 @@
   position: relative;
   aspect-ratio: 2/3;
   width: 100%;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
 }
 
 .movie-poster img {
@@ -27,60 +27,156 @@
   object-fit: cover;
 }
 
-.favorite-btn {
+.movie-overlay {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: white;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+/* Vertical stack container in top-right corner */
+.movie-card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: flex;
+  flex-direction: column; /* Stacks heart and + vertically */
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-
-  /* Start completely invisible */
-  opacity: 0;
-  pointer-events: none; /* Prevents clicking while invisible */
-
-  /* Smooth fade-in for all visual properties */
-  transition: 
-    opacity 0.25s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease;
-
-  /* Backdrop blur setup */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  /* Force GPU layer isolation so the blur is pre-baked */
-  will-change: opacity, transform;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-
+  pointer-events: auto;
   z-index: 10;
+
+
 }
 
-/* 2. Show button when hovering over the parent movie card */
-.movie-card:hover .favorite-btn {
+
+
+/* Shared styling for both overlay action buttons */
+.favorite-btn,
+.add-to-list-btn {
+  box-sizing: border-box !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50% !important;
+
+  /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  color: white;
+  cursor: pointer;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* Force the browser GPU to pre-render the blur layer immediately */
+  -webkit-backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(8px) !important;
+
+  /* Keep opacity at 1 so the blur layer stays warm in memory */
+  opacity: 0;
+  visibility: hidden;
+
+  /* Scale from slightly smaller so it feels like a smooth reveal */
+  transform: scale(0.95);
+
+  transition: 
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Equalize visual size and optical centering of characters */
+.favorite-btn {
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.add-to-list-btn {
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+}
+
+/* Optically centers the plus character inside the flex container */
+.add-to-list-btn span {
+  display: inline-block;
+  transform: translateY(-2px);
+}
+
+.movie-card:hover .favorite-btn,
+.movie-card:hover .add-to-list-btn,
+.movie-card-actions:has(.add-to-list-menu) .favorite-btn,
+.movie-card-actions:has(.add-to-list-menu) .add-to-list-btn {
   opacity: 1;
-  pointer-events: auto; /* Enable clicks when visible */
+  visibility: visible;
+  transform: scale(1);
 }
 
-/* 3. Button hover state (when cursor is directly on the button) */
-.favorite-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1) translate3d(0, 0, 0);
+/* Individual button hover styling */
+.favorite-btn:hover,
+.add-to-list-btn:hover {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  transform: scale(1.1) !important;
 }
-
-
 
 .favorite-btn.active {
   color: #ff4757;
+}
+
+/* List Menu Positioning */
+.list-menu-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.add-to-list-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px); /* Opens menu under the + button */
+  min-width: 160px;
+  max-width: 220px;
+  padding: 6px;
+  background: rgba(25, 25, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.add-to-list-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.add-to-list-menu button:hover {
+  background: rgba(50, 55, 144, 0.8);
+}
+
+.add-to-list-menu p {
+  margin: 6px 8px;
+  color: #ccc;
+  font-size: 13px;
 }
 
 .rating-select {
@@ -121,7 +217,7 @@
 @media (max-width: 960px) {
   .movie-card {
     font-size: 0.8rem;
-  flex: 1 0 142px;
+    flex: 1 0 142px;
   }
   
   .movie-info h3 {
@@ -133,12 +229,12 @@
   .movie-info {
     padding: 0.8rem;
   }
-  .favorite-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
-    top: 0.5rem;
-    right: 0.5rem;
+  .favorite-btn,
+  .add-to-list-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
   }
 }
 
@@ -154,7 +250,6 @@
   .movie-info p {
     font-size: 0.7rem;
   }
-  
 }
 
 @media (max-width: 440px) {
