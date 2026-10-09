@@ -9,6 +9,7 @@ import {Routes, Route} from "react-router-dom"
 import { MovieProvider } from './contexts/MovieContext'
 import NavBar from './components/NavBar'
 import Lists from './pages/Lists';
+import CustomList from "./pages/CustomList";
 
 
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/favorites" element={<Favorites />}/>
           <Route path="/lists" element={<Lists />}/>
+          <Route path="/lists/:listId" element={<CustomList />} />
         </Routes>
       </main>
     </MovieProvider>

@@ -1,0 +1,102 @@
+.lists-page {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  /* Default Desktop Margin (> 900px) */
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+.lists-page h2 {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.lists-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Individual List Card Box (200px - 300px target) */
+.list-card {
+  width: 260px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  text-decoration: none;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.list-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.list-card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-card-count {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0;
+}
+
+.list-card-posters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 0.75rem;
+  border-radius: 6px;
+}
+
+.list-card-poster-thumb {
+  width: 90px;
+  height: 135px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+}
+
+.list-card-empty-preview {
+  width: 100%;
+  height: 135px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* Screen sizes <= 900px: Fixed smaller side margins */
+@media (max-width: 900px) {
+  .lists-page {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}

@@ -1,0 +1,76 @@
+/* Base wrapper for draggable movie cards */
+.draggable-card-wrapper {
+touch-action: none;
+user-select: none;
+position: relative;
+box-sizing: border-box;
+}
+
+/* Floating card shown while dragging */
+.draggable-card-wrapper.is-dragging {
+background: transparent !important;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+border: none !important;
+border-radius: 12px;
+overflow: hidden;
+cursor: grabbing;
+z-index: 9999;
+animation: none !important;
+transform: none !important;
+height: auto !important;
+}
+
+/* Prevent hover transforms from affecting the floating card */
+.draggable-card-wrapper.is-dragging * {
+animation: none !important;
+transform: none !important;
+transition: none !important;
+}
+
+/* Keep movie images correctly sized */
+.draggable-card-wrapper.is-dragging img,
+.movie-card img {
+display: block !important;
+width: 100%;
+height: auto !important;
+margin: 0 !important;
+}
+
+/* Keep movie information aligned */
+.draggable-card-wrapper.is-dragging .movie-info,
+.movie-info {
+margin-top: 0 !important;
+}
+
+/* Dashed outline marking the dragged card's original position */
+.draggable-card-wrapper.placeholder-slot {
+border: 2px dashed rgba(255, 255, 255, 0.35) !important;
+border-radius: 12px !important;
+background-color: rgba(255, 255, 255, 0.05) !important;
+box-sizing: border-box !important;
+width: 100%;
+min-height: 100%;
+opacity: 1 !important;
+}
+
+/* Hide the card inside the placeholder without collapsing its space */
+.draggable-card-wrapper.placeholder-slot > * {
+visibility: hidden !important;
+}
+
+/* Fade in cards when they appear */
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.movies-grid > .draggable-card-wrapper {
+animation: fadeIn 0.3s ease-out forwards;
+}

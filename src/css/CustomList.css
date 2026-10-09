@@ -1,0 +1,62 @@
+/* CustomList.css */
+
+.custom-list-page {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  /* Single source of truth for page outer margins */
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+/* Remove nested grid padding to eliminate duplicate side margins */
+.custom-list-page .movies-grid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.custom-list-page h2 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.custom-list-count {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.back-to-lists {
+  display: inline-block;
+  color: #7f6eff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.back-to-lists:hover {
+  color: #ff2a35;
+}
+
+.empty-custom-list {
+  color: #888;
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+/* Screen sizes <= 900px: Fixed smaller side margins */
+@media (max-width: 900px) {
+  .custom-list-page {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}

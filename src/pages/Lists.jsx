@@ -1,60 +1,48 @@
-import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
+import "../css/Lists.css";
 
 function Lists() {
-  const { user, loading, createList, customLists } = useMovieContext();
-  const [listTitle, setListTitle] = useState("");
-
-  
-
-  if (loading) {
-    return <div className="lists-container"><p>Loading...</p></div>;
-  }
-
-  if (!user) {
-    return (
-      <div className="lists-container">
-        <h2>Custom Lists</h2>
-        <p>Please sign in to create and manage custom lists.</p>
-      </div>
-    );
-  }
-
-  const handleCreateList = async (e) => {
-    e.preventDefault();
-    if (!listTitle.trim()) return;
-
-    await createList(listTitle.trim());
-    setListTitle(""); // Clear input after submission
-  };
+  const { customLists } = useMovieContext();
 
   return (
-    <div className="lists-container">
-      <h2>Your Lists</h2>
+    <div className="lists-page">
+      <h2>My Lists</h2>
 
-      <form onSubmit={handleCreateList} className="create-list-form">
-        <input
-          type="text"
-          placeholder="Enter list title (e.g., Sci-Fi Favorites)..."
-          value={listTitle}
-          onChange={(e) => setListTitle(e.target.value)}
-        />
-        <button type="submit">Create List</button>
-      </form>
+      <div className="lists-grid">
+        {customLists.map((list) => {
+          const previewMovies = list.movies?.slice(0, 2) || [];
 
-      <div className="custom-lists-grid">
-        {customLists.length === 0 ? (
-          <p>No custom lists yet. Create one above!</p>
-        ) : (
-          customLists.map((list) => (
-            <div key={list.id} className="list-card">
-              <h3>{list.title}</h3>
-              <p>{list.movies ? list.movies.length : 0} movies</p>
-            </div>
-          ))
-        )}
+          return (
+            <Link key={list.id} to={`/lists/${list.id}`} className="list-card">
+              <div className="list-card-header">
+                <h3>{list.title}</h3>
+                <p className="list-card-count">
+                  {list.movies?.length ?? 0}{" "}
+                  {list.movies?.length === 1 ? "movie" : "movies"}
+                </p>
+              </div>
+
+              <div className="list-card-posters">
+                {previewMovies.length > 0 ? (
+                  previewMovies.map((movie) => (
+                    <img
+                      key={movie.id}
+                      src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                      alt={movie.title}
+                      className="list-card-poster-thumb"
+                    />
+                  ))
+                ) : (
+                  <div className="list-card-empty-preview">
+                    <span>Empty List</span>
+                  </div>
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </div>
-
     </div>
   );
 }

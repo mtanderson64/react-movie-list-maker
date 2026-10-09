@@ -155,6 +155,57 @@ export const MovieProvider = ({ children }) => {
     }
   };
 
+  // Reorder movies inside a specific Custom List
+  const reorderCustomList = async (listId, updatedMovies) => {
+    if (!user) return;
+
+    // Immediately update local customLists state for responsive drag & drop UI
+    setCustomLists((prevLists) =>
+      prevLists.map((list) =>
+        list.id === listId ? { ...list, movies: updatedMovies } : list
+      )
+    );
+
+    try {
+      const listRef = doc(db, "users", user.uid, "customLists", listId);
+      await updateDoc(listRef, {
+        movies: updatedMovies,
+      });
+    } catch (error) {
+      console.error("Error updating custom list order in Firebase:", error);
+    }
+  };
+
+  const removeMovieFromList = async (listId, movieId) => {
+    if (!user) return;
+
+    // Optimistic UI update
+    setCustomLists((prevLists) =>
+      prevLists.map((list) => {
+        if (list.id === listId) {
+          return {
+            ...list,
+            movies: list.movies.filter((m) => m.id !== movieId),
+          };
+        }
+        return list;
+      })
+    );
+
+    try {
+      const listRef = doc(db, "users", user.uid, "customLists", listId);
+      const targetList = customLists.find((l) => l.id === listId);
+      if (!targetList) return;
+
+      const updatedMovies = targetList.movies.filter((m) => m.id !== movieId);
+      await updateDoc(listRef, {
+        movies: updatedMovies,
+      });
+    } catch (error) {
+      console.error("Error removing movie from custom list:", error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       setCustomLists([]);
@@ -185,7 +236,9 @@ export const MovieProvider = ({ children }) => {
     isFavorite,
     createList,
     addMovieToList,
+    reorderCustomList,
     customLists,
+    removeMovieFromList,
   };
 
   return (
