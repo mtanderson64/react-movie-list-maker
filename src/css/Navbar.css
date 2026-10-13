@@ -10,7 +10,6 @@
 .navbar-brand {
   font-size: 1.25rem;
   font-weight: 800;
-  line-height: 1.125;
 }
 
 
@@ -24,6 +23,7 @@
   justify-content: center;
   gap: 0.75rem;
   font-weight: 900;
+  line-height: 1;
 }
 
 .navbar-links {
@@ -39,7 +39,7 @@
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.278);
 }
 
 @media (max-width: 768px) {

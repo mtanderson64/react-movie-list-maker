@@ -8,11 +8,22 @@
   padding-right: 5vw;
 }
 
+.lists-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
 .lists-page h2 {
   margin-bottom: 2rem;
   font-size: 1.5rem;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.create-list-form input {
+  padding: 4px 6px;
+  font-size: 1rem;
 }
 
 .lists-grid {
@@ -25,7 +36,7 @@
 
 /* Individual List Card Box (200px - 300px target) */
 .list-card {
-  width: 260px;
+  width: 320px;
   background: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -52,6 +63,22 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.list-card-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-card-top button {
+  font-size: 0.8rem;
+  background-color:rgb(121, 27, 27);
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+.list-card-top button:hover {
+  background-color: rgb(151, 32, 32);;
 }
 
 .list-card-count {

@@ -132,6 +132,15 @@ export const MovieProvider = ({ children }) => {
     }
   };
 
+  const deleteList = async (listId) => {
+    try {
+      const customListsRef = doc(db, "users", user.uid, "customLists", listId);
+      await deleteDoc(customListsRef);
+    } catch (error) {
+      console.error("Error deleting custom list:", error);
+    }
+  };
+
   const addMovieToList = async (listId, movie) => {
     if (!user) {
       alert("Please sign in to add movies to a list!");
@@ -239,6 +248,7 @@ export const MovieProvider = ({ children }) => {
     reorderCustomList,
     customLists,
     removeMovieFromList,
+    deleteList
   };
 
   return (
