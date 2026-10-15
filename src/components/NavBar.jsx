@@ -18,6 +18,18 @@ function NavBar({ user }) {
       <Link to="/lists" className="nav-link">Lists</Link>
       <AuthDropdown user={user}/>
     </div>
+
+    <div className="hamburger">
+      ----<br/>----<br/>----
+    </div>
+
+    <div className="mobile-links">
+      <Link to="/" className="mobile-link">Home</Link>
+      <Link to="/favorites" className="mobile-link">Favorites</Link>
+      <Link to="/lists" className="mobile-link">Lists</Link>
+      <AuthDropdown user={user}/>
+    </div>
+
   </nav>
 }
 

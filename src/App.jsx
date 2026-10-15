@@ -10,6 +10,7 @@ import { MovieProvider } from './contexts/MovieContext'
 import NavBar from './components/NavBar'
 import Lists from './pages/Lists';
 import CustomList from "./pages/CustomList";
+import Footer from "./components/Footer";
 
 
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/lists/:listId" element={<CustomList />} />
         </Routes>
       </main>
+      <Footer />
     </MovieProvider>
   )
 }
