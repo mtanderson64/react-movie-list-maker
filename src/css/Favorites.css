@@ -119,3 +119,13 @@
     text-align: center;
   }
 }
+
+@media (max-width: 500px) {
+  .favorites {
+    padding: 1.5rem 0;
+  }
+
+  .favorites h2 {
+    margin-bottom: 1.5rem;
+  }
+}
