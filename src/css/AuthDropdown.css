@@ -72,3 +72,12 @@
 
   margin-left: 0.5rem;
 } */
+
+@media (max-width: 500px) {
+  .auth-btn {
+    font-size: 1.25rem;
+    padding: 0.5rem 1.25rem;
+    margin-top: 0.5rem;
+    height: auto;
+  }
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../css/NavBar.css";
 import AuthDropdown from "./AuthDropdown";
@@ -7,6 +7,22 @@ function NavBar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 501px)");
+
+    const handleScreenChange = (event) => {
+      if (event.matches) {
+        setMenuOpen(false);
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleScreenChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleScreenChange);
+    };
+  }, []);
 
   return (
     <nav className="navbar">
@@ -41,7 +57,7 @@ function NavBar({ user }) {
       </div>
 
       <button
-        className="hamburger"
+        className={`hamburger ${menuOpen ? "hamburger-active" : ""}`}
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={menuOpen}
