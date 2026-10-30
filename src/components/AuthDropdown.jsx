@@ -67,6 +67,58 @@ function AuthDropdown({ user }) {
 // If user is logged in, render profile picture square trigger & user dropdown menu
   if (user) {
 
+    if (window.innerWidth < 501) {
+      return (
+        <div className="auth-dropdown-container" ref={dropdownRef}>
+        <button 
+          onClick={toggleDropdown} 
+          className="auth-btn profile-square-btn"
+          aria-label="User Profile"
+          style={{
+            padding: '0.5rem 1rem',
+            borderRadius: '6px',
+            overflow: 'hidden',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#662fff'
+          }}
+        >
+          Profile
+        </button>
+
+        {isOpen && (
+          <div 
+            className="auth-dropdown-menu profile-dropdown-menu"
+            style={{
+              position: 'absolute',
+              left: '-95px',
+              marginTop: '8px',
+              minWidth: '100px'
+            }}
+          >
+            {(user.displayName || user.email) && (
+              <p className="user-profile-name" style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold' }}>
+                {user.displayName || user.email}
+              </p>
+            )}
+            <button 
+              onClick={() => {
+                setIsOpen(false);
+                logout();
+              }} 
+              className="auth-btn logout-btn"
+              style={{ width: '100%' }}
+            >
+              Log Out
+            </button>
+          </div>
+        )}
+      </div>
+      )
+    }
+
     return (
       <div className="auth-dropdown-container" ref={dropdownRef}>
         <button 

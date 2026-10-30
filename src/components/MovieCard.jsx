@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
 import "../css/MovieCard.css";
 
 function MovieCard({ movie, currentListId }) {
+
+  const navigate = useNavigate();
+
   const {
     isFavorite,
     addToFavorites,
@@ -14,6 +18,10 @@ function MovieCard({ movie, currentListId }) {
 
   const [showMenu, setShowMenu] = useState(false);
   const favorite = isFavorite(movie.id);
+
+  const handleCardClick = () => {
+  navigate(`/movie/${movie.id}`);
+};
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
@@ -43,7 +51,7 @@ function MovieCard({ movie, currentListId }) {
   };
 
   return (
-    <div className="movie-card">
+    <div className="movie-card" onClick={handleCardClick}>
       <div className="movie-poster">
         <img
           src={

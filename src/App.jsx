@@ -11,6 +11,7 @@ import NavBar from './components/NavBar'
 import Lists from './pages/Lists';
 import CustomList from "./pages/CustomList";
 import Footer from "./components/Footer";
+import MovieDetails from "./pages/MovieDetails";
 
 
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/favorites" element={<Favorites />}/>
           <Route path="/lists" element={<Lists />}/>
           <Route path="/lists/:listId" element={<CustomList />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
         </Routes>
       </main>
       <Footer />
