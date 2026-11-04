@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../css/NavBar.css";
-import "../assets/logo.svg";  
+import logo from "../assets/logo.svg";  
 import AuthDropdown from "./AuthDropdown";
 
 function NavBar({ user }) {
@@ -31,7 +31,7 @@ function NavBar({ user }) {
         <Link to="/" onClick={closeMenu}>
           <div className="navbar-logo">
             <img
-              src="/src/assets/logo.svg"
+              src={logo}
               alt="Movie Mem"
               className="nav-logo-img"
             />
