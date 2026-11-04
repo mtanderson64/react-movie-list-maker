@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../css/NavBar.css";
+import "../assets/logo.svg";
 import AuthDropdown from "./AuthDropdown";
 
 function NavBar({ user }) {
