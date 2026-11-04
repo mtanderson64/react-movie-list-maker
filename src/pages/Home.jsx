@@ -9,9 +9,33 @@ import MovieCardSkeleton from "../components/MovieCardSkeleton";
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
+  const [sortOption, setSortOption] = useState("popularity");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+
+  const sortedMovies = [...movies].sort((a, b) => {
+  switch (sortOption) {
+    case "title":
+      return a.title.localeCompare(b.title);
+
+    case "newest":
+      return new Date(b.release_date) - new Date(a.release_date);
+
+    case "oldest":
+      return new Date(a.release_date) - new Date(b.release_date);
+
+    case "rating-high":
+      return b.vote_average - a.vote_average;
+
+    case "rating-low":
+      return a.vote_average - b.vote_average;
+
+    case "popularity":
+    default:
+      return b.popularity - a.popularity;
+  }
+});
 
   useEffect(() => {
     setSearchQuery("");/* 
@@ -81,6 +105,23 @@ function Home() {
         </button>
       </form>
 
+      <div className="sort-container">
+        <label htmlFor="sort-movies">Sort by:</label>
+
+        <select
+          id="sort-movies"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="popularity">Popularity</option>
+          <option value="title">Title (A–Z)</option>
+          <option value="newest">Release Date (Newest)</option>
+          <option value="oldest">Release Date (Oldest)</option>
+          <option value="rating-high">Rating (Highest)</option>
+          <option value="rating-low">Rating (Lowest)</option>
+        </select>
+      </div>
+
       {error && <div className="error-message">{error}</div>}
 
       {loading ? (
@@ -91,7 +132,7 @@ function Home() {
           </div>
         ) : (
           <div className="movies-grid">
-            {movies.map((movie) => (
+            {sortedMovies.map((movie) => (
               <MovieCard movie={movie} key={movie.id} />
             ))}
           </div>
