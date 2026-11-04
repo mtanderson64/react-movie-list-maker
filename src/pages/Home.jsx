@@ -3,6 +3,8 @@ import "../css/Home.css";
 import { useState, useEffect } from "react";
 import { searchMovies, getPopularMovies } from "../services/api";
 import { useLocation } from "react-router-dom";
+import MovieCardSkeleton from "../components/MovieCardSkeleton";
+
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -82,14 +84,18 @@ function Home() {
       {error && <div className="error-message">{error}</div>}
 
       {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
-      )}
+          <div className="movies-grid">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <MovieCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="movies-grid">
+            {movies.map((movie) => (
+              <MovieCard movie={movie} key={movie.id} />
+            ))}
+          </div>
+        )}
     </div>
   );
 }

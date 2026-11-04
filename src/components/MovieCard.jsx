@@ -17,6 +17,11 @@ function MovieCard({ movie, currentListId }) {
   } = useMovieContext();
 
   const [showMenu, setShowMenu] = useState(false);
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+
   const favorite = isFavorite(movie.id);
 
   const handleCardClick = () => {
@@ -53,14 +58,35 @@ function MovieCard({ movie, currentListId }) {
   return (
     <div className="movie-card" onClick={handleCardClick}>
       <div className="movie-poster">
-        <img
-          src={
-            movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "https://via.placeholder.com/500x750?text=No+Poster"
-          }
-          alt={movie.title}
-        />
+        
+        {!imageLoaded && !imageError && (
+          <div className="poster-loading">
+            Loading...
+          </div>
+        )}
+
+        {!imageError && (
+          <img
+            src={
+              movie.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                : "https://via.placeholder.com/500x750?text=No+Poster"
+            }
+            alt={movie.title}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
+            className={imageLoaded ? "loaded" : "loading"}
+          />
+        )}
+
+        {imageError && (
+          <div className="poster-loading">
+            Poster unavailable
+          </div>
+        )}
+
+
+
         <div className="movie-overlay" />
 
         <div className="movie-card-actions">
